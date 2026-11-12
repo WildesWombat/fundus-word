@@ -4,12 +4,47 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fundus für Word</title>
+    <style>#boot{color:#1f1f1d;padding:14px;font:13px Segoe UI,-apple-system,Arial,sans-serif}#boot-errors div{color:#8a2a1b;white-space:pre-wrap;word-break:break-word;background:#fbe9e6;border-radius:5px;margin-top:8px;padding:8px}</style>
+    <script>
+      // Startdiagnose: Fehler sichtbar machen statt einer leeren Seitenleiste.
+      window.__fundusErrors = [];
+      function fundusShowError(msg) {
+        window.__fundusErrors.push(msg);
+        var box = document.getElementById("boot-errors");
+        if (box) { var d = document.createElement("div"); d.textContent = msg; box.appendChild(d); }
+      }
+      window.addEventListener("error", function (e) {
+        var t = e.target;
+        if (t && t !== window && (t.src || t.href)) {
+          fundusShowError("Datei konnte nicht geladen werden: " + (t.src || t.href));
+          return;
+        }
+        fundusShowError("Fehler: " + (e.message || e.type) + (e.filename ? " (" + e.filename.split("/").pop() + ":" + e.lineno + ")" : ""));
+      }, true);
+      window.addEventListener("unhandledrejection", function (e) {
+        fundusShowError("Fehler: " + (e.reason && e.reason.message ? e.reason.message : String(e.reason)));
+      });
+      setTimeout(function () {
+        if (!window.__fundusStarted) {
+          fundusShowError(
+            typeof Office === "undefined"
+              ? "Die Office-Bibliothek von Microsoft konnte nicht geladen werden (Internetverbindung, Firewall oder Proxy?)."
+              : "Word hat das Add-in nach 15 Sekunden noch nicht freigegeben (Office.onReady)."
+          );
+        }
+      }, 15000);
+    </script>
     <!-- Office-Bibliothek von Microsoft; außerhalb von Word läuft das Add-in im Testmodus. -->
-    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    <script type="module" crossorigin src="./assets/taskpane-Ba3oqRl-.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/taskpane-fIKzSFaM.css">
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" onerror="fundusShowError('office.js konnte nicht geladen werden.')"></script>
+    <script type="module" crossorigin src="./assets/taskpane-2l0UYCKM.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/taskpane-ZhCivPWu.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="boot">
+        <strong>Fundus wird geladen …</strong>
+        <div id="boot-errors"></div>
+      </div>
+    </div>
   </body>
 </html>

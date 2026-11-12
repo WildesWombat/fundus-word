@@ -6,7 +6,7 @@
            xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
            xsi:type="TaskPaneApp">
   <Id>6f1c2a7e-5b8d-4f3a-9c41-2d7e8b9a0f15</Id>
-  <Version>0.1.0.0</Version>
+  <Version>1.0.1.0</Version>
   <ProviderName>Fundus</ProviderName>
   <DefaultLocale>de-DE</DefaultLocale>
   <DisplayName DefaultValue="Fundus" />
